@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.stone.communication.dao.ControlInfoMapper">
+  <resultMap id="BaseResultMap" type="test.stone.communication.entity.ControlInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="link_type" jdbcType="INTEGER" property="linkType" />
+    <result column="control_type" jdbcType="INTEGER" property="controlType" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, link_type, control_type, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from control_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from control_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="test.stone.communication.entity.ControlInfo">
+    insert into control_info (id, link_type, control_type, 
+      gmt_create)
+    values (#{id,jdbcType=INTEGER}, #{linkType,jdbcType=INTEGER}, #{controlType,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="test.stone.communication.entity.ControlInfo">
+    insert into control_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="linkType != null">
+        link_type,
+      </if>
+      <if test="controlType != null">
+        control_type,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="linkType != null">
+        #{linkType,jdbcType=INTEGER},
+      </if>
+      <if test="controlType != null">
+        #{controlType,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="test.stone.communication.entity.ControlInfo">
+    update control_info
+    <set>
+      <if test="linkType != null">
+        link_type = #{linkType,jdbcType=INTEGER},
+      </if>
+      <if test="controlType != null">
+        control_type = #{controlType,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="test.stone.communication.entity.ControlInfo">
+    update control_info
+    set link_type = #{linkType,jdbcType=INTEGER},
+      control_type = #{controlType,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

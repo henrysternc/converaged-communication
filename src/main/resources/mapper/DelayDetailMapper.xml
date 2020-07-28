@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.stone.communication.dao.DelayDetailMapper">
+  <resultMap id="BaseResultMap" type="test.stone.communication.entity.DelayDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="link_type" jdbcType="INTEGER" property="linkType" />
+    <result column="device_addr" jdbcType="VARCHAR" property="deviceAddr" />
+    <result column="delay_time" jdbcType="INTEGER" property="delayTime" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, link_type, device_addr, delay_time, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from delay_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from delay_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="test.stone.communication.entity.DelayDetail">
+    insert into delay_detail (id, link_type, device_addr, 
+      delay_time, gmt_create)
+    values (#{id,jdbcType=INTEGER}, #{linkType,jdbcType=INTEGER}, #{deviceAddr,jdbcType=VARCHAR}, 
+      #{delayTime,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="test.stone.communication.entity.DelayDetail">
+    insert into delay_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="linkType != null">
+        link_type,
+      </if>
+      <if test="deviceAddr != null">
+        device_addr,
+      </if>
+      <if test="delayTime != null">
+        delay_time,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="linkType != null">
+        #{linkType,jdbcType=INTEGER},
+      </if>
+      <if test="deviceAddr != null">
+        #{deviceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delayTime != null">
+        #{delayTime,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="test.stone.communication.entity.DelayDetail">
+    update delay_detail
+    <set>
+      <if test="linkType != null">
+        link_type = #{linkType,jdbcType=INTEGER},
+      </if>
+      <if test="deviceAddr != null">
+        device_addr = #{deviceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="delayTime != null">
+        delay_time = #{delayTime,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="test.stone.communication.entity.DelayDetail">
+    update delay_detail
+    set link_type = #{linkType,jdbcType=INTEGER},
+      device_addr = #{deviceAddr,jdbcType=VARCHAR},
+      delay_time = #{delayTime,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

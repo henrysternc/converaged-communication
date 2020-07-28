@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.stone.communication.dao.LinkStatusMapper">
+  <resultMap id="BaseResultMap" type="test.stone.communication.entity.LinkStatus">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="switch_mesh_status" jdbcType="INTEGER" property="switchMeshStatus" />
+    <result column="switch_4g_status" jdbcType="INTEGER" property="switch4gStatus" />
+    <result column="switch_lte_r_status" jdbcType="INTEGER" property="switchLteRStatus" />
+    <result column="switch_sat_status" jdbcType="INTEGER" property="switchSatStatus" />
+    <result column="link_mesh_status" jdbcType="INTEGER" property="linkMeshStatus" />
+    <result column="link_4g_status" jdbcType="INTEGER" property="link4gStatus" />
+    <result column="link_lte_r_status" jdbcType="INTEGER" property="linkLteRStatus" />
+    <result column="link_sat_status" jdbcType="INTEGER" property="linkSatStatus" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, switch_mesh_status, switch_4g_status, switch_lte_r_status, switch_sat_status, 
+    link_mesh_status, link_4g_status, link_lte_r_status, link_sat_status, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from link_status
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from link_status
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="test.stone.communication.entity.LinkStatus">
+    insert into link_status (id, switch_mesh_status, switch_4g_status, 
+      switch_lte_r_status, switch_sat_status, link_mesh_status, 
+      link_4g_status, link_lte_r_status, link_sat_status, 
+      gmt_create)
+    values (#{id,jdbcType=INTEGER}, #{switchMeshStatus,jdbcType=INTEGER}, #{switch4gStatus,jdbcType=INTEGER}, 
+      #{switchLteRStatus,jdbcType=INTEGER}, #{switchSatStatus,jdbcType=INTEGER}, #{linkMeshStatus,jdbcType=INTEGER}, 
+      #{link4gStatus,jdbcType=INTEGER}, #{linkLteRStatus,jdbcType=INTEGER}, #{linkSatStatus,jdbcType=INTEGER}, 
+      #{gmtCreate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="test.stone.communication.entity.LinkStatus">
+    insert into link_status
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="switchMeshStatus != null">
+        switch_mesh_status,
+      </if>
+      <if test="switch4gStatus != null">
+        switch_4g_status,
+      </if>
+      <if test="switchLteRStatus != null">
+        switch_lte_r_status,
+      </if>
+      <if test="switchSatStatus != null">
+        switch_sat_status,
+      </if>
+      <if test="linkMeshStatus != null">
+        link_mesh_status,
+      </if>
+      <if test="link4gStatus != null">
+        link_4g_status,
+      </if>
+      <if test="linkLteRStatus != null">
+        link_lte_r_status,
+      </if>
+      <if test="linkSatStatus != null">
+        link_sat_status,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="switchMeshStatus != null">
+        #{switchMeshStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switch4gStatus != null">
+        #{switch4gStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switchLteRStatus != null">
+        #{switchLteRStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switchSatStatus != null">
+        #{switchSatStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkMeshStatus != null">
+        #{linkMeshStatus,jdbcType=INTEGER},
+      </if>
+      <if test="link4gStatus != null">
+        #{link4gStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkLteRStatus != null">
+        #{linkLteRStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkSatStatus != null">
+        #{linkSatStatus,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="test.stone.communication.entity.LinkStatus">
+    update link_status
+    <set>
+      <if test="switchMeshStatus != null">
+        switch_mesh_status = #{switchMeshStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switch4gStatus != null">
+        switch_4g_status = #{switch4gStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switchLteRStatus != null">
+        switch_lte_r_status = #{switchLteRStatus,jdbcType=INTEGER},
+      </if>
+      <if test="switchSatStatus != null">
+        switch_sat_status = #{switchSatStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkMeshStatus != null">
+        link_mesh_status = #{linkMeshStatus,jdbcType=INTEGER},
+      </if>
+      <if test="link4gStatus != null">
+        link_4g_status = #{link4gStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkLteRStatus != null">
+        link_lte_r_status = #{linkLteRStatus,jdbcType=INTEGER},
+      </if>
+      <if test="linkSatStatus != null">
+        link_sat_status = #{linkSatStatus,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="test.stone.communication.entity.LinkStatus">
+    update link_status
+    set switch_mesh_status = #{switchMeshStatus,jdbcType=INTEGER},
+      switch_4g_status = #{switch4gStatus,jdbcType=INTEGER},
+      switch_lte_r_status = #{switchLteRStatus,jdbcType=INTEGER},
+      switch_sat_status = #{switchSatStatus,jdbcType=INTEGER},
+      link_mesh_status = #{linkMeshStatus,jdbcType=INTEGER},
+      link_4g_status = #{link4gStatus,jdbcType=INTEGER},
+      link_lte_r_status = #{linkLteRStatus,jdbcType=INTEGER},
+      link_sat_status = #{linkSatStatus,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
