@@ -2,14 +2,14 @@ package test.stone.communication.defines;
 
 public interface RedisKeyIds {
 
-    public static final String TOTAL_MESH_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String TOTAL_LTE_R_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String TOTAL_4G_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String TOTAL_SAT_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String AVG_MESH_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String AVG_LTE_R_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String AVG_4G_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
-    public static final String AVG_SAT_DELAY_TIME_PREFIX = "MESH_DELAY_TIME_PREFIX-";
+    public static final String TOTAL_MESH_DELAY_TIME_PREFIX = "TOTAL_MESH_DELAY_TIME_PREFIX-";
+    public static final String TOTAL_LTE_R_DELAY_TIME_PREFIX = "TOTAL_LTE_R_DELAY_TIME_PREFIX-";
+    public static final String TOTAL_4G_DELAY_TIME_PREFIX = "TOTAL_4G_DELAY_TIME_PREFIX-";
+    public static final String TOTAL_SAT_DELAY_TIME_PREFIX = "TOTAL_SAT_DELAY_TIME_PREFIX-";
+    public static final String AVG_MESH_DELAY_TIME_PREFIX = "AVG_MESH_DELAY_TIME_PREFIX-";
+    public static final String AVG_LTE_R_DELAY_TIME_PREFIX = "AVG_LTE_R_DELAY_TIME_PREFIX-";
+    public static final String AVG_4G_DELAY_TIME_PREFIX = "AVG_4G_DELAY_TIME_PREFIX-";
+    public static final String AVG_SAT_DELAY_TIME_PREFIX = "AVG_SAT_DELAY_TIME_PREFIX-";
 
     public static final String CONTROL_MACHINE = "CONTROL_MACHINE";
 

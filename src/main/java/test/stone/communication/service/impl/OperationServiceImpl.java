@@ -24,6 +24,7 @@ import test.stone.communication.util.HexUtils;
 import test.stone.communication.util.IdentityUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -72,21 +73,25 @@ public class OperationServiceImpl implements OperationService {
         //关闭计数总开关
         redisTemplate.opsForValue().set(RedisKeyIds.totalSwitch, 0);
         Integer currentId = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.currentTaskId);
-        Integer satTotalDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_SAT_DELAY_TIME_PREFIX);
-        Integer meshTotalDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_MESH_DELAY_TIME_PREFIX);
-        Integer LteRTotalDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_LTE_R_DELAY_TIME_PREFIX);
-        Integer LteTotalDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_4G_DELAY_TIME_PREFIX);
+        Object satTotalDelay = redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_SAT_DELAY_TIME_PREFIX);
+        BigDecimal satBigDecimalTotalDelay = new BigDecimal(satTotalDelay.toString());
+        Object meshTotalDelay = redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_MESH_DELAY_TIME_PREFIX);
+        BigDecimal meshBigDecimalTotalDelay = new BigDecimal(meshTotalDelay.toString());
+        Object LteRTotalDelay = redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_LTE_R_DELAY_TIME_PREFIX);
+        BigDecimal LteRBigDecimalTotalDelay = new BigDecimal(LteRTotalDelay.toString());
+        Object LteTotalDelay = redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_4G_DELAY_TIME_PREFIX);
+        BigDecimal LteBigDecimalTotalDelay = new BigDecimal(LteTotalDelay.toString());
 
-        Integer avg4gDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.AVG_4G_DELAY_TIME_PREFIX);
-        Integer avgMeshDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.AVG_MESH_DELAY_TIME_PREFIX);
-        Integer avgLteRDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.AVG_LTE_R_DELAY_TIME_PREFIX);
-        Integer avgSATDelay = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_SAT_DELAY_TIME_PREFIX);
+        Object avg4gDelay = redisTemplate.opsForValue().get(RedisKeyIds.AVG_4G_DELAY_TIME_PREFIX);
+        Object avgMeshDelay = redisTemplate.opsForValue().get(RedisKeyIds.AVG_MESH_DELAY_TIME_PREFIX);
+        Object avgLteRDelay = redisTemplate.opsForValue().get(RedisKeyIds.AVG_LTE_R_DELAY_TIME_PREFIX);
+        Object avgSATDelay = redisTemplate.opsForValue().get(RedisKeyIds.TOTAL_SAT_DELAY_TIME_PREFIX);
 
         StatisticInfo build = StatisticInfo.builder().id(currentId)
-                .satTotalDelay(satTotalDelay)
-                .meshTotalDelay(meshTotalDelay)
-                .lteTotalDelay(LteTotalDelay)
-                .lteRTotalDelay(LteRTotalDelay)
+                .satTotalDelay(satBigDecimalTotalDelay.intValue())
+                .meshTotalDelay(meshBigDecimalTotalDelay.intValue())
+                .lteTotalDelay(LteRBigDecimalTotalDelay.intValue())
+                .lteRTotalDelay(LteBigDecimalTotalDelay.intValue())
                 .satAvgDelay(new BigDecimal(avg4gDelay.toString()))
                 .meshAvgDelay(new BigDecimal(avgLteRDelay.toString()))
                 .lteRAvgDelay(new BigDecimal(avgMeshDelay.toString()))
