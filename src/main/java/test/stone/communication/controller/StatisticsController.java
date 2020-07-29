@@ -16,7 +16,7 @@ public class StatisticsController {
      * 查询本次详情
      * @return
      */
-    @GetMapping("/getDetails/{id}")
+    @PostMapping("/getDetails/{id}")
     public ResponseMsg showDetails(@PathVariable("id")Integer id){
 
         return operationService.getDetails(id);
@@ -28,7 +28,7 @@ public class StatisticsController {
      *
      * @return
      */
-    @GetMapping("/init")
+    @PostMapping("/init")
     public ResponseMsg init(){
         return operationService.init();
     }
@@ -38,7 +38,7 @@ public class StatisticsController {
      * 最终的数据入库（StatisticsInfo）
      * @return
      */
-    @GetMapping("/complete")
+    @PostMapping("/complete")
     public ResponseMsg complete(){
         return operationService.complete();
     }
@@ -49,7 +49,7 @@ public class StatisticsController {
      * @param pageSize
      * @return
      */
-    @GetMapping("/getList/{pageNum}/{pageSize}")
+    @PostMapping("/getList/{pageNum}/{pageSize}")
     public ResponseMsg getList(@PathVariable("pageNum") Integer pageNum,
                                @PathVariable("pageSize") Integer pageSize){
         return operationService.getList(pageNum, pageSize);

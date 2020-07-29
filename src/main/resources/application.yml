@@ -8,12 +8,12 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://192.168.100.187:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-#    username: root
-#    password: Rds_dssp_liqian
-    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://192.168.244.129:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: reg-rtzt
+#    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+#    username: root
+#    password: reg-rtzt
     druid:
       # 初始连接数
       initialSize: 5
@@ -74,8 +74,8 @@ spring:
     database: 0
     timeout: 20000
     # Redis服务器地址
-    host: localhost
-#    host: 192.168.244.129
+#    host: localhost
+    host: 192.168.244.129
     port: 16379
     #  port: 5278
     # Redis服务器连接密码（默认为空）

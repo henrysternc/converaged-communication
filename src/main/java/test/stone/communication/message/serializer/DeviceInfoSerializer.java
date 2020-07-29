@@ -3,6 +3,8 @@ package test.stone.communication.message.serializer;
 import lombok.extern.slf4j.Slf4j;
 import test.stone.communication.entity.message.DeviceInfoMsg;
 import test.stone.communication.message.SimpleMessage;
+import test.stone.communication.util.DataTypeConvertUtils;
+import test.stone.communication.util.HexUtils;
 import test.stone.communication.util.IdentityUtils;
 
 import java.nio.ByteBuffer;
@@ -31,8 +33,11 @@ public class DeviceInfoSerializer extends SimpleSerializer {
                 for(int i=0;i<SimpleMessage.IP_LENGTH;i++){
                     obuIp[i] = bytes[i+idx+SimpleMessage.DEVICE_CODE_LENGTH];
                 }
-                req.setObuIp(IdentityUtils.bytes2IpV4(obuIp));
-                req.setPort(bb.getShort());
+                req.setObuIp(new String(obuIp, "ascii").trim());
+                byte[] ports = new byte[2];
+                ports[0] = bytes[bytes.length-2];
+                ports[1] = bytes[bytes.length-1];
+                req.setPort(DataTypeConvertUtils.byte2ToUnsignedShort(ports, 0));
                 return req;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -59,7 +64,7 @@ public class DeviceInfoSerializer extends SimpleSerializer {
                 //消息内容
                 bb.put(IdentityUtils.makeIdentityByte(req.getObuMac()));
                 //bb.put() //ip 18位
-                bb.putShort(req.getPort());
+                bb.putShort((short) req.getPort());
                 int size = bb.position();
                 bb.rewind();
                 ret = bb.array();

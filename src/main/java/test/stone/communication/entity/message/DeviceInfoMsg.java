@@ -20,7 +20,7 @@ public class DeviceInfoMsg extends TestMessage {
 
     @Getter
     @Setter
-    private short port;
+    private int port;
 
     public DeviceInfoMsg(){
         super(DEVICE_INFO);
