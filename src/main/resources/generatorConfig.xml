@@ -18,9 +18,9 @@
         <!-- 数据库连接，直接通过${}读取application.properties里的配置 -->
         <jdbcConnection
                 driverClass="com.mysql.jdbc.Driver"
-                connectionURL="jdbc:mysql://192.168.92.129:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"
+                connectionURL="jdbc:mysql://192.168.244.129:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"
                 userId="root"
-                password="Rds_dssp_liqian"/>
+                password="reg-rtzt"/>
 
         <!-- 生成POJO对象，并将类放到com.songguoliang.springboot.entity包下 -->
         <javaModelGenerator targetPackage="test.stone.communication.entity" targetProject="src/main/java"></javaModelGenerator>
@@ -31,7 +31,7 @@
 
 
 
-        <table tableName="statistic_info" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+        <table tableName="sys_config" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <!-- 是否只生成POJO对象 -->
             <property name="modelOnly" value="false"/>

@@ -10,8 +10,11 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import test.stone.communication.dao.SysConfigMapper;
+import test.stone.communication.entity.SysConfig;
 import test.stone.communication.util.SpringUtil;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -20,17 +23,30 @@ public class NettyClient {
     /**
      * 主机
      */
-    private String host;
+    private static String host;
 
     /**
      * 端口号
      */
-    private int port;
+    private static int port;
 
     private static ObuClientHandler handler;
 
+    private static SysConfigMapper sysConfigMapper;
+
     static{
         handler = SpringUtil.getBean(ObuClientHandler.class);
+        sysConfigMapper = SpringUtil.getBean(SysConfigMapper.class);
+        List<SysConfig> list = sysConfigMapper.getList();
+        for(int i=0;i<list.size();i++){
+            SysConfig sysConfig = list.get(i);
+
+            if("server_ip".equals(sysConfig.getName())){
+                host = sysConfig.getValue();
+            }else if("server_port".equals(sysConfig.getName())){
+                port = Integer.parseInt(sysConfig.getValue());
+            }
+        }
     }
 
     private final static int readerIdleTime = 60;// 读操作空闲秒
@@ -40,12 +56,8 @@ public class NettyClient {
     /**
      * 构造函数
      *
-     * @param host host
-     * @param port port
      */
-    public NettyClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public NettyClient() {
     }
 
     /**
