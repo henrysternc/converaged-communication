@@ -21,16 +21,9 @@ public abstract class SimpleSerializer implements BaseSerializer, MessageCode {
      */
     protected int deserializeHeader(TestMessage msg, byte[] bytes) throws Exception {
         TestMessage.Header header = msg.getHeader();
-//        byte[] o1 = new byte[2];
-//        System.arraycopy(bytes, 0, o1, 0, 2);
-//        header.setStarting(o1);
 
         ByteBuffer bb = ByteBuffer.wrap(bytes, 0, SimpleMessage.HEADER_LENGTH);
         header.setMsgType(bb.get());
-       // header.setMsgType(bb.get());
-//        byte msgType = header.getMsgType();
-//
-//        msgType = bb.get();
 
         byte[] device_identity = new byte[SimpleMessage.DEVICE_CODE_LENGTH];
         bb.get(device_identity);

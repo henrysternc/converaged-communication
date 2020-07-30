@@ -1,18 +1,3 @@
-/*
- * Copyright 2012 The Netty Project
- *
- * The Netty Project licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
 package test.stone.communication.netty.client;
 
 import io.netty.buffer.ByteBuf;
@@ -32,7 +17,6 @@ import test.stone.communication.message.process.DelayTimeProcess;
 import test.stone.communication.message.process.DeviceInfoProcess;
 import test.stone.communication.message.process.LinkStatusProcess;
 import test.stone.communication.message.serializer.RegSerializer;
-import test.stone.communication.netty.ObuHelper;
 import test.stone.communication.netty.ObuServer;
 import test.stone.communication.netty.ObuServerListener;
 import test.stone.communication.util.HexUtils;
@@ -45,14 +29,7 @@ import test.stone.communication.util.HexUtils;
 @Sharable
 @Slf4j
 public class ObuClientHandler extends ChannelInboundHandlerAdapter implements MessageCode {
-//	@Autowired
-//	private KafkaTemplate kafkaTemplate;
 
-	@Autowired
-	private ObuHelper obuHelper;
-	//
-	// @Autowired
-	// private HttpUtil httpUtil;
 
 	@Autowired
 	private RedisTemplate redisTemplate;
@@ -72,18 +49,6 @@ public class ObuClientHandler extends ChannelInboundHandlerAdapter implements Me
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
-		// ctx.writeAndFlush(byteBuf);
-		// 测试，发送直接使用字节数组或者字符串都不能发出去，用ByteBuf可以。
-		// ctx.writeAndFlush("wtert");
-		// byte mybytes[] = FileTool.fileToByteArray(new File("f:/xu6.txt"));
-		// ByteBuf byteBuf =Unpooled.buffer(mybytes.length);
-		// byteBuf.writeBytes(mybytes);
-		// ctx.writeAndFlush(byteBuf);
-		// ctx.close();
-		// log.info(new StringBuilder().append("## ").append(getIPString(ctx)).append("
-		// ObuServer channelActive ## ")
-		// .toString());
-
 		// 最好的是保存RSU设备编码，经过路由的话则IP地址可能不可靠
 		// 现协议尚未涉及故还是使用IP地址
 
@@ -102,7 +67,6 @@ public class ObuClientHandler extends ChannelInboundHandlerAdapter implements Me
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
 		ctx.flush();
-		// System.out.println("channelReadComplete");
 	}
 
 	@Override
@@ -123,7 +87,6 @@ public class ObuClientHandler extends ChannelInboundHandlerAdapter implements Me
 		ObuServer.getChannelMap().remove(ip);
 		ctx.close();
 
-		// httpUtil.insertSysLog(ip, LogConsts.LOG_TYPE_RSU, OFFLINE);
 		log.info(String.format("%s 断开", ip));
 		sendRsuStateMessage(ip,0);
 
@@ -131,7 +94,6 @@ public class ObuClientHandler extends ChannelInboundHandlerAdapter implements Me
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
-		log.info("i am coming~~~");
 		byte[] bytes = null;
 		ByteBuf m = (ByteBuf) msg;
 
@@ -143,8 +105,6 @@ public class ObuClientHandler extends ChannelInboundHandlerAdapter implements Me
 			 log.info(String.format("收到[%d] ：%s", bytes.length, tmpStr));
 
 			SimpleMessage simpleMessage = deserialize(bytes);
-
-			//doKfkWrok(simpleMessage);
 			processMessage(simpleMessage);
 			try {
 				//obuHelper.handle(simpleMessage, ctx.channel());

@@ -68,23 +68,17 @@ public class NettyClient {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group).channel(NioSocketChannel.class);
-           // bootstrap.option(ChannelOption.TCP_NODELAY, true);
-            // bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
             bootstrap.handler(new LoggingHandler(LogLevel.INFO)).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ChannelPipeline p = ch.pipeline();
                     p.addLast(new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime,TimeUnit.SECONDS));
-                    //
                     p.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 8, 2, 0, 0));
-                    //p.addLast(new StringDecoder());
                     p.addLast(handler);
                 }
             });
 
             Channel channel = bootstrap.connect(host, port).sync().channel();
-            //channel.writeAndFlush(msg);
-
 
             System.out.println("连接建立了吗？结果：" + channel.isActive());
             channel.closeFuture().sync();
@@ -92,12 +86,9 @@ public class NettyClient {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-
             try {
                 TimeUnit.SECONDS.sleep(5);
-
                 connect(); // 断线重连
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

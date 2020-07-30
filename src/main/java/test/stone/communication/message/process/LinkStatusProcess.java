@@ -12,9 +12,6 @@ import test.stone.communication.message.SimpleMessage;
 
 import java.util.Date;
 
-/**
- * 处理链路状态消息 19 3c 4a 56 77 88 99 00 08 01 01 00 01 00 01 01 01
- */
 @Service
 @Slf4j
 public class LinkStatusProcess extends AbstractProcess {

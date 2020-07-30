@@ -9,6 +9,9 @@ import test.stone.communication.util.IdentityUtils;
 
 import java.nio.ByteBuffer;
 
+/**
+ * 协议结构 |消息类型 1位|mac地址 6位|占位符 1位|消息体长度 2位|消息体内容（Mac地址6位|IP地址18位（ASCII）|端口2位）|
+ */
 @Slf4j
 public class DeviceInfoSerializer extends SimpleSerializer {
 

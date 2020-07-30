@@ -5,7 +5,10 @@ import test.stone.communication.entity.message.LinkStatusMsg;
 import test.stone.communication.message.SimpleMessage;
 
 import java.nio.ByteBuffer;
-
+/**
+ * 处理链路状态消息 19 3c 4a 56 77 88 99 00 00 08 01 01 00 01 00 01 01 01
+ * 协议结构 |消息类型 1位|mac地址 6位|占位符 1位|消息体长度 2位|消息体内容（各链路状态，每种占两位）|
+ */
 @Slf4j
 public class LinkStatusSerializer extends SimpleSerializer {
 

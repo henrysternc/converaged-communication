@@ -6,6 +6,10 @@ import test.stone.communication.message.SimpleMessage;
 
 import java.nio.ByteBuffer;
 
+/**
+ * 自定义消息
+ * 协议结构 |消息类型 1位|mac地址 6位|占位符 1位|消息体长度 2位|消息体内容|
+ */
 @Slf4j
 public class CustomizeSerializer extends SimpleSerializer {
 
