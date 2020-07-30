@@ -94,7 +94,7 @@ public class NettyClient {
             group.shutdownGracefully();
 
             try {
-                TimeUnit.SECONDS.sleep(5000);
+                TimeUnit.SECONDS.sleep(5);
 
                 connect(); // 断线重连
 

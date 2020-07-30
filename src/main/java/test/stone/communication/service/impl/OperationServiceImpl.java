@@ -1,33 +1,32 @@
 package test.stone.communication.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import test.stone.communication.config.ExecutorConfig;
 import test.stone.communication.dao.CustomizeMsgMapper;
 import test.stone.communication.dao.StatisticInfoMapper;
+import test.stone.communication.dao.SysConfigMapper;
 import test.stone.communication.defines.RedisKeyIds;
 import test.stone.communication.defines.ResponseMsg;
 import test.stone.communication.entity.CustomizeMsg;
 import test.stone.communication.entity.StatisticInfo;
+import test.stone.communication.entity.SysConfig;
 import test.stone.communication.entity.message.CustomizeMsgInfo;
 import test.stone.communication.entity.message.SwitchMsg;
-import test.stone.communication.entity.vo.ControlDeviceVO;
 import test.stone.communication.message.serializer.RegSerializer;
 import test.stone.communication.netty.ObuServer;
 import test.stone.communication.service.OperationService;
 import test.stone.communication.util.DataTypeConvertUtils;
 import test.stone.communication.util.HexUtils;
-import test.stone.communication.util.IdentityUtils;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 @Service
 @Slf4j
@@ -46,7 +45,10 @@ public class OperationServiceImpl implements OperationService {
     private ObuServer obuServer;
 
     @Autowired
-    private ExecutorService executorService;
+    private ExecutorConfig ExecutorConfig;
+
+    @Autowired
+    private SysConfigMapper sysConfigMapper;
 
     @Override
     public ResponseMsg init() {
@@ -124,7 +126,7 @@ public class OperationServiceImpl implements OperationService {
             SwitchMsg switchMsg = new SwitchMsg();
             switchMsg.setLinkId(DataTypeConvertUtils.int2OneByte(linkType));
             switchMsg.setLinkSwitchStatus(DataTypeConvertUtils.int2OneByte(status));
-            Object o = redisTemplate.opsForValue().get(RedisKeyIds.CONTROL_MACHINE);
+            //Object o = redisTemplate.opsForValue().get(RedisKeyIds.CONTROL_MACHINE);
             byte[] deviceCode = {(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
             switchMsg.getHeader().setDeviceCode(deviceCode);
             byte[] bytes = RegSerializer.serialize(switchMsg);
@@ -140,10 +142,15 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public ResponseMsg sendMsg(String msg) {
-        if(msg.getBytes().length > 1024){
+        Integer sendSwitch = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.sendSwitch);
+        if(sendSwitch == 0 && StringUtils.isBlank(msg)){
+            return ResponseMsg.error(500,"消息不可为空");
+        }
+
+        if(sendSwitch == 0 && msg.getBytes().length > 1024){
             return ResponseMsg.error(500,"消息过长");
         }
-        Integer sendSwitch = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.sendSwitch);
+
         if(sendSwitch == 1){
             //如果当前是开启状态，修改为关闭状态并 返回成功
             redisTemplate.opsForValue().set(RedisKeyIds.sendSwitch, 0);
@@ -153,24 +160,26 @@ public class OperationServiceImpl implements OperationService {
             redisTemplate.opsForValue().set(RedisKeyIds.sendSwitch, 1);
         }
         try{
+            Long cycleTime = 200L;
+
+            List<SysConfig> list = sysConfigMapper.getList();
+
+            for(int i=0;i<list.size();i++){
+                SysConfig sysConfig = list.get(i);
+                if("cycle_time".equals(sysConfig.getName())){
+                    cycleTime = Long.parseLong(sysConfig.getValue());
+                    break;
+                }
+            }
 
             CustomizeMsgInfo customizeMsgInfo = new CustomizeMsgInfo();
             customizeMsgInfo.setCustomizeInfo(msg);
-//            Object o = redisTemplate.opsForValue().get(RedisKeyIds.CONTROL_MACHINE);
-//            String deviceCode = null;
-//            if(o != null){
-//                ControlDeviceVO controlDeviceVO = JSON.toJavaObject((JSON) JSON.toJSON(o), ControlDeviceVO.class);
-//                deviceCode = controlDeviceVO.getDeviceCode();
-//            }else{
-//                deviceCode = "00:00:00:00:00:00";
-//            }
+
             byte[] deviceCode = {(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
             customizeMsgInfo.getHeader().setDeviceCode(deviceCode);
             byte[] bytes = RegSerializer.serialize(customizeMsgInfo);
-            //obuServer.publish(bytes);
-            executorService.execute(new Send(bytes, obuServer, redisTemplate));
-            String s = HexUtils.byte2String(bytes);
-            log.info("发送了内容：{}", s);
+            //使用新线程去执行发送任务
+            ExecutorConfig.asyncPromiseExecutor().execute((new Send(bytes, obuServer, redisTemplate, cycleTime)));
             CustomizeMsg customizeMsg = new CustomizeMsg();
             customizeMsg.setGmtCreate(new Date());
             customizeMsg.setMsgContent(msg);
@@ -204,17 +213,22 @@ public class OperationServiceImpl implements OperationService {
 }
 
 
+@Slf4j
 class Send extends Thread{
+
     private byte[] bytes;
 
     private ObuServer obuServer;
 
     private RedisTemplate redisTemplate;
 
-    public Send(byte[] bytes, ObuServer obuServer, RedisTemplate redisTemplate){
+    private Long cycleTime;
+
+    public Send(byte[] bytes, ObuServer obuServer, RedisTemplate redisTemplate, Long cycleTime){
         this.bytes = bytes;
         this.obuServer = obuServer;
         this.redisTemplate = redisTemplate;
+        this.cycleTime = cycleTime;
     }
     @Override
     public void run(){
@@ -224,7 +238,9 @@ class Send extends Thread{
                 //不停地发送
                 try{
                     obuServer.publish(bytes);
-                    Thread.sleep(200);
+                    String s = HexUtils.byte2String(bytes);
+                    log.info("发送了内容：{}", s);
+                    Thread.sleep(cycleTime);
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }

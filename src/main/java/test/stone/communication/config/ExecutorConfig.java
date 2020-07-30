@@ -29,7 +29,7 @@ public class ExecutorConfig {
         executor.setMaxPoolSize(20);
         executor.setKeepAliveSeconds(60);
         executor.setQueueCapacity(99999);
-        executor.setThreadNamePrefix("dssp-async-");
+        executor.setThreadNamePrefix("cc-async-");
 
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 

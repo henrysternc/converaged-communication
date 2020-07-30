@@ -35,5 +35,7 @@ public class InitData implements ApplicationRunner {
         redisTemplate.opsForValue().set(RedisKeyIds.AVG_SAT_DELAY_TIME_PREFIX, 0);
 
         redisTemplate.opsForValue().set(RedisKeyIds.totalSwitch, 0);
+
+        redisTemplate.opsForValue().set(RedisKeyIds.sendSwitch, 0);
     }
 }
