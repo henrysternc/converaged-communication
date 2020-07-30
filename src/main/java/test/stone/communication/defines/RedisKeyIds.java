@@ -29,4 +29,6 @@ public interface RedisKeyIds {
     public static final String currentTaskId = "currentTaskId";
 
     public static final String totalSwitch = "totalSwitch";
+
+    public static final String sendSwitch = "sendSwitch";
 }

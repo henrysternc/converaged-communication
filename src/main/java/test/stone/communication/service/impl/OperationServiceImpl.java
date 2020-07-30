@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 @Service
 @Slf4j
@@ -43,6 +44,9 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private ObuServer obuServer;
+
+    @Autowired
+    private ExecutorService executorService;
 
     @Override
     public ResponseMsg init() {
@@ -139,7 +143,17 @@ public class OperationServiceImpl implements OperationService {
         if(msg.getBytes().length > 1024){
             return ResponseMsg.error(500,"消息过长");
         }
+        Integer sendSwitch = (Integer) redisTemplate.opsForValue().get(RedisKeyIds.sendSwitch);
+        if(sendSwitch == 1){
+            //如果当前是开启状态，修改为关闭状态并 返回成功
+            redisTemplate.opsForValue().set(RedisKeyIds.sendSwitch, 0);
+            return ResponseMsg.success("停止发送成功");
+        }else{
+            //如果当前是关闭状态，修改为可发送状态
+            redisTemplate.opsForValue().set(RedisKeyIds.sendSwitch, 1);
+        }
         try{
+
             CustomizeMsgInfo customizeMsgInfo = new CustomizeMsgInfo();
             customizeMsgInfo.setCustomizeInfo(msg);
 //            Object o = redisTemplate.opsForValue().get(RedisKeyIds.CONTROL_MACHINE);
@@ -153,7 +167,8 @@ public class OperationServiceImpl implements OperationService {
             byte[] deviceCode = {(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
             customizeMsgInfo.getHeader().setDeviceCode(deviceCode);
             byte[] bytes = RegSerializer.serialize(customizeMsgInfo);
-            obuServer.publish(bytes);
+            //obuServer.publish(bytes);
+            executorService.execute(new Send(bytes, obuServer, redisTemplate));
             String s = HexUtils.byte2String(bytes);
             log.info("发送了内容：{}", s);
             CustomizeMsg customizeMsg = new CustomizeMsg();
@@ -185,5 +200,38 @@ public class OperationServiceImpl implements OperationService {
         redisTemplate.opsForValue().set(RedisKeyIds.COUNT_MESH, 0);
         redisTemplate.opsForValue().set(RedisKeyIds.COUNT_LTE_R, 0);
         redisTemplate.opsForValue().set(RedisKeyIds.COUNT_SAT, 0);
+    }
+}
+
+
+class Send extends Thread{
+    private byte[] bytes;
+
+    private ObuServer obuServer;
+
+    private RedisTemplate redisTemplate;
+
+    public Send(byte[] bytes, ObuServer obuServer, RedisTemplate redisTemplate){
+        this.bytes = bytes;
+        this.obuServer = obuServer;
+        this.redisTemplate = redisTemplate;
+    }
+    @Override
+    public void run(){
+        for(;;){
+            Object o = redisTemplate.opsForValue().get(RedisKeyIds.sendSwitch);
+            if(Integer.parseInt(o.toString()) == 1){
+                //不停地发送
+                try{
+                    obuServer.publish(bytes);
+                    Thread.sleep(200);
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }else{
+                break;
+            }
+        }
+
     }
 }
