@@ -58,9 +58,10 @@ public abstract class SimpleSerializer implements BaseSerializer, MessageCode {
         header.setMsgLength((short) (ClassUtils.getFieldLength(msg)));
 
         byte[] tmp = HexUtils.shortToByteArray(header.getMsgLength());
+        bytes[idx++] = 0x00;
         bytes[idx++] = tmp[0];
         bytes[idx++] = tmp[1];
-        bytes[idx++] = 0x00;
+
         return idx;
     }
 
