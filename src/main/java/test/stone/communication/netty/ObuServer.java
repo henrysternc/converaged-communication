@@ -98,23 +98,8 @@ public class ObuServer implements Runnable {
 
 	}
 
-	// 报⽂头 设备标识 功能码 消息长度 消息内容（PDU） 备⽤字节 校验码
-	// 2字节 6字节 1字节 2字节 N字节 4字节 2字节
-
-	// lengthFieldOffset = 2 (= the length of Header 1)
-	// lengthFieldLength = 3
-	// lengthAdjustment = 0
-	// initialBytesToStrip = 0
-	//
-	// BEFORE DECODE (17 bytes) AFTER DECODE (17 bytes)
-	// +----------+----------+----------------+
-	// +----------+----------+----------------+
-	// | Header 1 | Length | Actual Content |----->| Header 1 | Length | Actual
-	// Content |
-	// | 0xCAFE | 0x00000C | "HELLO, WORLD" | | 0xCAFE | 0x00000C | "HELLO, WORLD" |
-	// +----------+----------+----------------+
-	// +----------+----------+----------------+
-
+	// 功能码 设备标识 占位符 消息长度 消息内容（PDU）
+	// 2字节 6字节 1字节 2字节 N字节
 	@Override
 	public void run() {
 		try {
