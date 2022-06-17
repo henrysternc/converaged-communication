@@ -19,7 +19,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
         <lang3.version>3.5</lang3.version>
-        <fastjson.version>1.2.58</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <pool2.version>2.6.2</pool2.version>
         <pagehelper.version>1.2.10</pagehelper.version>
     </properties>
